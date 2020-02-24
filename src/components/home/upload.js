@@ -1,62 +1,84 @@
 import React, { Component } from "react";
 import axios from "axios";
+import Success from "./success";
 
 class Upload extends Component {
   state = {
     file: null,
     loading: false,
-    status: false
+    success: false,
+    link: null,
+    expiry: null,
+    progress: 0
   };
 
-  handleChange = e => {
+  uploadFile = e => {
     this.setState({
-      file: e.target.files[0]
+      loading: true
     });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const file = this.state.file;
-    if (file) {
-      this.uploadFile();
-    } else {
-      console.log("Please select a file first!");
-    }
-  };
-
-  uploadFile = () => {
-    console.log(this.state.file);
-
-    axios({
-      url: "https://file.io",
-      method: "POST",
-      data: {
-        file: this.state.file
-      }
-    })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+    var formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    axios
+      .post("https://file.io/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        onUploadProgress: progressEvent => {
+          // console.log(
+          //   "Upload progress: " +
+          //     Math.round(
+          //       (progressEvent.loaded / progressEvent.total) * 100
+          //     ).toString() +
+          //     "%"
+          // );
+          this.setState({
+            ...this.state,
+            progress: Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+          });
+        }
+      })
+      .then(res => {
+        this.setState({
+          loading: false,
+          success: true,
+          link: res.data.link,
+          expiry: res.data.expiry
+        });
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          success: false,
+          link: null,
+          expiry: null
+        });
+      });
   };
 
   render() {
     return (
       <div>
         <br />
-        <form onSubmit={e => this.handleSubmit(e)}>
-          <input type="file" onChange={e => this.handleChange(e)} />
-          {this.state.loading ? (
-            <button disabled type="submit">
-              Upload
-            </button>
-          ) : (
-            <button type="submit" onClick={e => this.handleSubmit(e)}>
-              Upload
-            </button>
-          )}
-        </form>
-        <div>
-          {this.state.status ? <p>Uploaded!</p> : <p>Not uploaded yet!</p>}
+        {this.state.loading ? (
+          <button disabled className="custom-file-input-loading" name="loading">
+            {this.state.progress}% Uploaded
+          </button>
+        ) : (
+          <input
+            className="custom-file-input"
+            type="file"
+            name="file"
+            onChange={e => this.uploadFile(e)}
+          />
+        )}
+        <div style={{ paddingTop: "10px" }}>
+          <button className="btn-upload" type="submit">
+            Learn more
+          </button>
         </div>
+        <div>{this.state.success ? <Success data={this.state} /> : null}</div>
       </div>
     );
   }
