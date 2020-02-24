@@ -24,13 +24,6 @@ class Upload extends Component {
           "Content-Type": "multipart/form-data"
         },
         onUploadProgress: progressEvent => {
-          // console.log(
-          //   "Upload progress: " +
-          //     Math.round(
-          //       (progressEvent.loaded / progressEvent.total) * 100
-          //     ).toString() +
-          //     "%"
-          // );
           this.setState({
             ...this.state,
             progress: Math.round(
