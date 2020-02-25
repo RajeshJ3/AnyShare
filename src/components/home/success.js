@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { DOMAIN } from "../../utility";
 
 class Success extends Component {
   state = {
-    link: null
+    key: null
   };
   render() {
     const copyToClipboard = () => {
@@ -23,7 +24,7 @@ class Success extends Component {
           cols="1"
           rows="1"
           ref={textarea => (this.textArea = textarea)}
-          defaultValue={`${this.props.data.link}`}
+          defaultValue={`${DOMAIN}/share/${this.props.data.key}`}
         />
       </div>
     );

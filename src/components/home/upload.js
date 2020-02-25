@@ -1,20 +1,24 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Success from "./success";
+import { Link } from "react-router-dom";
 
 class Upload extends Component {
   state = {
-    file: null,
     loading: false,
     success: false,
-    link: null,
+    key: null,
     expiry: null,
     progress: 0
   };
 
   uploadFile = e => {
     this.setState({
-      loading: true
+      loading: true,
+      success: false,
+      key: null,
+      expiry: null,
+      progress: 0
     });
     var formData = new FormData();
     formData.append("file", e.target.files[0]);
@@ -34,9 +38,10 @@ class Upload extends Component {
       })
       .then(res => {
         this.setState({
+          progress: 0,
           loading: false,
           success: true,
-          link: res.data.link,
+          key: res.data.key,
           expiry: res.data.expiry
         });
       })
@@ -44,7 +49,7 @@ class Upload extends Component {
         this.setState({
           loading: false,
           success: false,
-          link: null,
+          key: null,
           expiry: null
         });
       });
@@ -67,9 +72,11 @@ class Upload extends Component {
           />
         )}
         <div style={{ paddingTop: "10px" }}>
-          <button className="btn-upload" type="submit">
-            Learn more
-          </button>
+          <Link to="/about">
+            <button className="btn-upload" type="submit">
+              Learn more
+            </button>
+          </Link>
         </div>
         <div>{this.state.success ? <Success data={this.state} /> : null}</div>
       </div>
