@@ -42,7 +42,7 @@ class File extends Component {
     };
     return (
       <div style={root}>
-        <p style={title}>Aye you sure to access the file?</p>
+        <p style={title}>Are you sure to access the file?</p>
         <p style={subTitle}>Once accessed, it'll be deleted.</p>
         <div
           style={{
