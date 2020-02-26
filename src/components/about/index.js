@@ -103,7 +103,7 @@ class About extends Component {
             been deleted.
           </p>
 
-          <h4 style={heading}>Cow can I contact the developer?</h4>
+          <h4 style={heading}>How can I contact the developer?</h4>
           <p style={paragraph}>
             I would love to hear from you,{" "}
             <a style={link} href="http://github.com/RajeshJ3">
